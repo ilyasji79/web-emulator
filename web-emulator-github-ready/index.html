@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mobile Emulator</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+
+  <!-- CodeMirror Core + Theme -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/material-darker.min.css">
+
+  <!-- CodeMirror Hint Addons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/show-hint.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/show-hint.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/html-hint.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/javascript-hint.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/css-hint.min.js"></script>
+
+  <!-- CodeMirror Modes -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/xml/xml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/htmlmixed/htmlmixed.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/css/css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
+
+  <!-- Prism for Read-Only Preview -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="vscode-frame">
+    <div class="title-bar">
+      <span class="window-controls">🟥 🟨 🟩</span>
+      <button id="backToEditor" style="display:none;">🔙 Back to Editor</button>
+
+      <div class="tabs">
+        <button id="autoRunBtn" class="toggle-button">Auto-run: OFF</button>
+        <button onclick="toggleCodePreview()">📄 View Code</button>
+        <button id="runBtn">▶ Run Code</button>
+
+        <span class="tab active" data-tab="html">📝 index.html <span class="close-tab">❌</span></span>
+        <span class="tab" data-tab="css">🎨 style.css <span class="close-tab">❌</span></span>
+        <span class="tab" data-tab="js">🧠 script.js <span class="close-tab">❌</span></span>
+        <span class="tab" data-tab="python">🐍 python.py <span class="close-tab">❌</span></span>
+        <button id="runPython" class="inline-run">Python Run</button>
+      </div>
+
+      <span class="title">webemulator</span>
+      <div class="controls">
+        <select id="device-select" onchange="changeDeviceSize()">
+          <option value="360x720">Pixel 4</option>
+          <option value="375x667">iPhone SE</option>
+          <option value="414x896">iPhone XR</option>
+          <option value="411x731">Redmi Note 4</option>
+          <option value="393x786">Redmi Note 5 Pro</option>
+        </select>
+        <button onclick="rotateDevice()">🔄 Rotate</button>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="left-side">
+        <div class="sidebar">
+          <div class="icon" id="addTabBtn">➕</div>
+          <div class="icon">📁</div>
+          <div class="icon">🔍</div>
+          <div class="icon">🧩</div>
+          <div class="icon">⚙️</div>
+
+        
+<div class="snippet-icons">
+ 
+  <i class="fa-brands fa-html5" data-snippet="html:basic" title="HTML Boilerplate"></i>
+  <i class="fa-brands fa-css3-alt" data-snippet="css:center" title="CSS Center Box"></i>
+    <i class="fa-brands fa-js" data-snippet="js:alert" title="JS Alert"></i>
+ <i class="fa-brands fa-python" data-snippet="python:print" title="Python Print"></i>
+   <i class="fas fa-image" data-snippet="html:img" title="Image Tag"></i>
+</div>
+
+        </div>
+
+        <div id="tabPopup" class="tab-popup"></div>
+
+        <div class="editor">
+          <textarea id="html-editor" data-editor="html" placeholder="HTML" style="display: none;"></textarea>
+          <textarea id="css-editor" data-editor="css" placeholder="CSS" style="display: none;"></textarea>
+          <textarea id="js-editor" data-editor="js" placeholder="JavaScript" style="display: none;"></textarea>
+          <textarea id="py-editor" data-editor="python" placeholder="Python" style="display: none;"></textarea>
+          <button id="runPython" class="inline-run" style="display: none;">🐍 Run Python</button>
+          <pre id="pythonOutput" style="display: none;" class="language-python"></pre>
+        </div>
+      </div>
+
+      <div class="right-side">
+        <div id="mobile">
+          <div class="notch"><div class="speaker"></div></div>
+          <div class="top-bar">
+            <span id="clock">12:00 PM</span>
+            <div class="icons">
+              <span>📶</span><span>🔋</span>
+              <button id="darkToggle" class="dark-btn">🌙</button>
+            </div>
+            <div class="side-button"></div>
+          </div>
+          <iframe id="output"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pyodide for Python Execution -->
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
+
+  <!-- App Logic -->
+  <script src="script.js"></script>
+</body>
+</html>
