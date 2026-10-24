@@ -1,0 +1,377 @@
+{
+  "name": "web-emulator",
+  "displayName": "Web Emulator",
+  "description": "Responsive layout testing inside VS Code: device presets, custom viewports, overflow diagnostics, local dev server and Flask/Django support.",
+  "version": "0.2.0",
+  "publisher": "solution-infotech-services",
+  "license": "MIT",
+  "icon": "media/icon.png",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other",
+    "Visualization"
+  ],
+  "keywords": [
+    "responsive",
+    "emulator",
+    "viewport",
+    "mobile",
+    "preview",
+    "flask",
+    "django",
+    "layout",
+    "overflow",
+    "devtools"
+  ],
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onWebviewPanel:webEmulator.preview"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "In an untrusted workspace the emulator can preview HTML files and URLs inside a sandboxed frame, but starting Flask/Django servers and using a workspace-defined Python interpreter is disabled.",
+      "restrictedConfigurations": [
+        "webEmulator.python.interpreterPath"
+      ]
+    },
+    "virtualWorkspaces": {
+      "supported": "limited",
+      "description": "Previewing local HTML files needs a real file system. Previewing URLs works in virtual workspaces."
+    }
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "webEmulator.open",
+        "title": "Open Emulator",
+        "category": "Web Emulator",
+        "icon": "$(device-mobile)"
+      },
+      {
+        "command": "webEmulator.openCurrentFile",
+        "title": "Open Current HTML File in Emulator",
+        "category": "Web Emulator",
+        "icon": "$(device-mobile)"
+      },
+      {
+        "command": "webEmulator.selectEntryFile",
+        "title": "Select HTML Entry File\u2026",
+        "category": "Web Emulator"
+      },
+      {
+        "command": "webEmulator.selectUrl",
+        "title": "Select Preview URL\u2026",
+        "category": "Web Emulator"
+      },
+      {
+        "command": "webEmulator.reload",
+        "title": "Reload Emulator",
+        "category": "Web Emulator",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "webEmulator.selectViewport",
+        "title": "Select Viewport Preset\u2026",
+        "category": "Web Emulator"
+      },
+      {
+        "command": "webEmulator.rotate",
+        "title": "Rotate Viewport",
+        "category": "Web Emulator"
+      },
+      {
+        "command": "webEmulator.goHome",
+        "title": "Reset to Android Home Screen",
+        "category": "Web Emulator"
+      },
+      {
+        "command": "webEmulator.toggleDiagnostics",
+        "title": "Toggle Diagnostics Panel",
+        "category": "Web Emulator"
+      },
+      {
+        "command": "webEmulator.copyViewport",
+        "title": "Copy Viewport Dimensions",
+        "category": "Web Emulator"
+      },
+      {
+        "command": "webEmulator.openInBrowser",
+        "title": "Open Preview in External Browser",
+        "category": "Web Emulator"
+      },
+      {
+        "command": "webEmulator.selectPythonInterpreter",
+        "title": "Select Python Interpreter\u2026",
+        "category": "Web Emulator"
+      },
+      {
+        "command": "webEmulator.startFlask",
+        "title": "Start Flask Server\u2026",
+        "category": "Web Emulator"
+      },
+      {
+        "command": "webEmulator.startDjango",
+        "title": "Start Django Server\u2026",
+        "category": "Web Emulator"
+      },
+      {
+        "command": "webEmulator.stopServer",
+        "title": "Stop Python Server",
+        "category": "Web Emulator"
+      },
+      {
+        "command": "webEmulator.openSettings",
+        "title": "Open Settings",
+        "category": "Web Emulator"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "webEmulator.openCurrentFile",
+          "when": "editorLangId == html"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "webEmulator.openCurrentFile",
+          "when": "editorLangId == html",
+          "group": "navigation@100"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "webEmulator.openCurrentFile",
+          "when": "editorLangId == html",
+          "group": "navigation@100"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "webEmulator.openCurrentFile",
+          "when": "resourceExtname =~ /^\\.(html?|xhtml)$/",
+          "group": "navigation@100"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "webEmulator.openCurrentFile",
+        "key": "ctrl+alt+shift+e",
+        "mac": "cmd+alt+shift+e",
+        "when": "editorLangId == html"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "webEmulator",
+          "title": "Web Emulator",
+          "icon": "media/activity.svg"
+        }
+      ]
+    },
+    "views": {
+      "webEmulator": [
+        {
+          "id": "webEmulator.actions",
+          "name": "Web Emulator",
+          "icon": "media/activity.svg"
+        }
+      ]
+    },
+    "taskDefinitions": [
+      {
+        "type": "webEmulator",
+        "required": [
+          "server"
+        ],
+        "properties": {
+          "server": {
+            "type": "string",
+            "enum": [
+              "flask",
+              "django"
+            ],
+            "description": "Which Python server this task runs."
+          }
+        }
+      }
+    ],
+    "configuration": {
+      "title": "Web Emulator",
+      "properties": {
+        "webEmulator.defaultPreset": {
+          "type": "string",
+          "default": "pixel-9",
+          "description": "Device preset used when the emulator opens for the first time, for example pixel-9, pixel-8, pixel-7, pixel-6, tablet-768x1024, laptop-1366x768 or desktop-1920x1080."
+        },
+        "webEmulator.autoReload": {
+          "type": "boolean",
+          "default": true,
+          "description": "Reload the emulator when a file inside the previewed project is saved."
+        },
+        "webEmulator.autoReloadDelay": {
+          "type": "number",
+          "default": 250,
+          "minimum": 0,
+          "maximum": 10000,
+          "description": "Delay in milliseconds between a save and the reload."
+        },
+        "webEmulator.autoReloadUrlTargets": {
+          "type": "boolean",
+          "default": false,
+          "description": "Also reload on save when previewing a URL. Leave off for dev servers that already hot-reload."
+        },
+        "webEmulator.defaultUrls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "http://localhost:3000",
+            "http://localhost:5173",
+            "http://localhost:5000",
+            "http://localhost:8000",
+            "http://localhost:8080"
+          ],
+          "description": "URLs offered by 'Select Preview URL'."
+        },
+        "webEmulator.allowRemoteUrls": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Allow previewing non-local `http(s)` URLs. When off, only `localhost` and loopback addresses are accepted."
+        },
+        "webEmulator.serveRoot": {
+          "type": "string",
+          "enum": [
+            "workspaceFolder",
+            "fileFolder"
+          ],
+          "default": "workspaceFolder",
+          "markdownDescription": "Folder exposed by the internal static server when previewing an HTML file. `workspaceFolder` lets root-relative paths like `/css/app.css` resolve; `fileFolder` exposes only the folder containing the HTML file. Dotfiles are never served."
+        },
+        "webEmulator.spaFallback": {
+          "type": "boolean",
+          "default": true,
+          "description": "When previewing a file, serve the entry HTML for unknown extension-less paths so client-side routing works."
+        },
+        "webEmulator.injectDiagnostics": {
+          "type": "boolean",
+          "default": true,
+          "description": "Inject a small diagnostics script into previewed HTML pages (overflow detection, error reporting). Disable if it interferes with your app."
+        },
+        "webEmulator.openBeside": {
+          "type": "boolean",
+          "default": true,
+          "description": "Open the emulator in a column beside the active editor."
+        },
+        "webEmulator.customPresets": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "width",
+              "height"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "width": {
+                "type": "number",
+                "minimum": 100,
+                "maximum": 10000
+              },
+              "height": {
+                "type": "number",
+                "minimum": 100,
+                "maximum": 10000
+              }
+            }
+          },
+          "description": "Extra viewport presets, for example [{\"name\": \"My phone\", \"width\": 412, \"height\": 915}]."
+        },
+        "webEmulator.comparePresets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "pixel-9",
+            "tablet-768x1024",
+            "laptop-1366x768"
+          ],
+          "description": "Preset ids shown side by side in compare mode (max 4)."
+        },
+        "webEmulator.python.interpreterPath": {
+          "type": "string",
+          "default": "",
+          "scope": "machine-overridable",
+          "markdownDescription": "Python executable used to start Flask/Django. Empty = auto-detect (`.venv`, `venv`, `python3`, `python`)."
+        },
+        "webEmulator.python.flask.app": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Value for `flask --app`, e.g. `app` or `myapp:create_app`. Empty = detect `app.py`, `wsgi.py`, `application.py`, `main.py` or `run.py` that contains `Flask(`."
+        },
+        "webEmulator.python.flask.port": {
+          "type": "number",
+          "default": 5000,
+          "minimum": 1,
+          "maximum": 65535,
+          "description": "Port for the Flask development server."
+        },
+        "webEmulator.python.flask.debug": {
+          "type": "boolean",
+          "default": false,
+          "description": "Start Flask with --debug (auto-reload and the Werkzeug debugger)."
+        },
+        "webEmulator.python.django.manage": {
+          "type": "string",
+          "default": "manage.py",
+          "description": "Path to manage.py relative to the workspace folder."
+        },
+        "webEmulator.python.django.port": {
+          "type": "number",
+          "default": 8000,
+          "minimum": 1,
+          "maximum": 65535,
+          "description": "Port for the Django development server."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "copy-assets": "node scripts/copy-assets.js",
+    "compile": "npm run copy-assets && tsc -p ./ && tsc -p ./tsconfig.webview.json",
+    "watch": "tsc -p ./ --watch",
+    "lint": "eslint src scripts --max-warnings 0",
+    "test:unit": "npm run compile && mocha --ui tdd --exit \"out/test/unit/**/*.test.js\"",
+    "test:integration": "npm run compile && node ./out/test/runIntegration.js",
+    "test": "npm run test:unit && npm run test:integration",
+    "package": "vsce package --allow-missing-repository",
+    "preview:build": "node scripts/preview/make.js out/preview.html",
+    "test:visual": "npm run compile && npm run preview:build && python3 scripts/preview/verify.py"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@types/jsdom": "^30.0.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20.19.43",
+    "@types/vscode": "^1.90.0",
+    "@vscode/codicons": "^0.0.46-24",
+    "@vscode/test-electron": "^3.1.0",
+    "@vscode/vsce": "^4.0.0",
+    "eslint": "^9.39.5",
+    "jsdom": "^30.1.3",
+    "mocha": "^10.8.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.72.0"
+  }
+}

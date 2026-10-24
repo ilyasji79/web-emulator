@@ -1,0 +1,198 @@
+/* Web Emulator webview. Uses VS Code theme variables; the navy accents come from the original prototype. */
+:root {
+  --we-navy: #191731;
+  --we-navy-deep: #0e0d1a;
+  --we-navy-active: #00003d;
+  --we-accent: #5966cc;
+  --we-border: var(--vscode-panel-border, #3a3a4f);
+  --we-stage: #0e0d1a;
+  --we-bezel: #333;
+  --we-ok: var(--vscode-testing-iconPassed, #3fb950);
+  --we-warn: var(--vscode-editorWarning-foreground, #cca700);
+  --we-err: var(--vscode-editorError-foreground, #f14c4c);
+}
+body.vscode-light { --we-stage: #e4e4ee; --we-bezel: #2b2b36; }
+body.vscode-high-contrast { --we-stage: var(--vscode-editor-background); }
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0; padding: 0; overflow: hidden;
+  font-family: var(--vscode-font-family); font-size: var(--vscode-font-size);
+  color: var(--vscode-foreground); background: var(--vscode-editor-background);
+}
+#app { display: flex; flex-direction: column; height: 100vh; }
+[hidden] { display: none !important; }
+
+/* ---- toolbar ---- */
+.toolbar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 6px 10px;
+  background: var(--vscode-editorGroupHeader-tabsBackground, var(--we-navy));
+  border-bottom: 1px solid var(--we-border);
+}
+.group { display: flex; align-items: center; gap: 4px; }
+.address-group { flex: 1 1 260px; min-width: 200px; }
+.times { opacity: .7; }
+select, input[type="number"], input[type="text"] {
+  height: 26px; padding: 0 6px; color: var(--vscode-input-foreground); background: var(--vscode-input-background);
+  border: 1px solid var(--vscode-input-border, var(--we-border)); border-radius: 3px; font: inherit;
+}
+select { max-width: 190px; color: var(--vscode-dropdown-foreground); background: var(--vscode-dropdown-background); border-color: var(--vscode-dropdown-border, var(--we-border)); }
+input.dim { width: 66px; }
+#address { flex: 1; min-width: 0; }
+.kind { font-size: 10px; letter-spacing: .06em; padding: 3px 6px; border-radius: 3px; background: var(--we-navy-active); color: #fff; border: 1px solid var(--we-accent); }
+select:focus, input:focus, button:focus-visible, .handle:focus-visible, li.clickable:focus-visible { outline: 1px solid var(--vscode-focusBorder, var(--we-accent)); outline-offset: 1px; }
+.btn {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 26px; padding: 0;
+  color: var(--vscode-icon-foreground, var(--vscode-foreground)); background: transparent; border: 1px solid transparent; border-radius: 4px; cursor: pointer;
+}
+.btn:hover { background: var(--vscode-toolbar-hoverBackground, rgba(128,128,128,.2)); }
+.btn.on { background: var(--we-navy-active); color: #fff; border-color: var(--we-accent); }
+.btn:disabled { opacity: .4; cursor: default; }
+.rotate-icon .codicon { transition: transform .15s ease; }
+.rotate-icon.turned .codicon { transform: rotate(90deg); }
+.badge {
+  position: absolute; top: -4px; right: -4px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px;
+  font-size: 10px; line-height: 16px; text-align: center; color: #fff; background: var(--we-err);
+}
+
+/* ---- stage ---- */
+.body { position: relative; flex: 1; min-height: 0; }
+.stage { position: absolute; inset: 0; overflow: auto; background: var(--we-stage); display: flex; }
+.stage.hidden { visibility: hidden; }
+.devices { display: flex; align-items: flex-start; gap: 24px; margin: auto; padding: 24px; }
+.slot { position: relative; flex: none; }
+.dims { position: absolute; top: 0; left: 50%; height: 24px; transform: translateX(-50%); font-size: 12px; line-height: 20px; color: var(--vscode-descriptionForeground, #aaa); white-space: nowrap; }
+.devices.multi .dims { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.device { position: absolute; top: 24px; left: 0; transform-origin: 0 0; background: var(--we-bezel); }
+.device .viewport { background: #fff; overflow: hidden; position: relative; }
+.device iframe { display: block; width: 100%; height: 100%; border: 0; background: #fff; }
+
+/* ---- Android device (dark graphite frame, punch-hole camera, system bars) ---- */
+.device.android {
+  --r: 34px; --bezel: 12px;
+  padding: var(--bezel); border-radius: calc(var(--r) + var(--bezel));
+  background: linear-gradient(145deg, #34363b 0%, #1b1c1f 45%, #26282c 100%);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08), 0 0 0 1.5px #08090a, 0 22px 44px rgba(0,0,0,.55), 0 3px 8px rgba(0,0,0,.4);
+}
+.device.android.bare { --bezel: 0px; background: transparent; box-shadow: none; }
+.hw { position: absolute; right: -3px; width: 3px; border-radius: 0 2px 2px 0; background: linear-gradient(90deg, #17181a, #2c2e32); }
+.hw.power { top: 22%; height: 56px; }
+.hw.volume { top: 33%; height: 92px; }
+.screen {
+  --top: 24px; --bottom: 16px; --right: 0px;
+  position: relative; overflow: hidden; isolation: isolate; border-radius: var(--r); background: #000; color: #fff;
+  font-family: Roboto, "Google Sans", system-ui, -apple-system, "Segoe UI", sans-serif; box-shadow: 0 0 0 2px #050506;
+}
+.screen .viewport { position: absolute; left: 0; top: var(--top); z-index: 0; background: #fff; }
+.sys-top, .sys-bottom { position: absolute; z-index: 3; display: flex; align-items: center; color: #f1f3f4; font-size: 12px; font-weight: 500; }
+.screen.mode-site .sys-top, .screen.mode-site .sys-bottom { background: #0f1012; }
+.sys-top { top: 0; left: 0; right: var(--right); height: var(--top); justify-content: space-between; padding: 0 max(16px, calc(var(--r) * .55)); }
+.sys-top .clock { letter-spacing: .01em; }
+.status-icons { display: inline-flex; align-items: center; gap: 5px; }
+.si { display: inline-flex; }
+.sys-bottom { left: 0; right: var(--right); bottom: 0; height: var(--bottom); justify-content: center; }
+.gesture { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 0; background: none; border: 0; cursor: pointer; }
+.gesture span { width: 108px; max-width: 40%; height: 4px; border-radius: 2px; background: #e8eaed; opacity: .92; }
+.screen.nav-buttons .sys-bottom { height: var(--bottom); justify-content: space-evenly; }
+.nav-btn { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 100%; min-height: 40px; padding: 0; color: #e8eaed; background: none; border: 0; cursor: pointer; }
+.nav-btn.inert { cursor: default; }
+.nav-btn:hover:not(.inert) { background: rgba(255,255,255,.08); }
+.screen.landscape.nav-buttons .sys-bottom { top: var(--top); bottom: 0; left: auto; right: 0; width: var(--right); height: auto; flex-direction: column; justify-content: center; gap: 18px; }
+.screen.landscape.nav-buttons .nav-btn { width: 100%; height: 48px; min-height: 0; }
+.cutout { position: absolute; z-index: 4; top: 6px; left: 50%; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle at 36% 34%, #2b4158 0, #0b1119 42%, #000 72%); box-shadow: 0 0 0 1.5px #000; }
+.screen.landscape .cutout { top: 50%; left: 12px; margin: -6px 0 0; }
+
+.home { position: absolute; inset: 0; z-index: 1; display: none; overflow: hidden; background: #1c1b45; }
+.screen.mode-home .home { display: block; }
+.wallpaper, .wall { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+.home-content { position: absolute; inset: 0 var(--right) 0 0; display: flex; flex-direction: column; justify-content: space-between;
+  padding: calc(var(--top) + 26px) 16px calc(var(--bottom) + 12px); }
+.home-date { font-size: 20px; font-weight: 400; text-shadow: 0 1px 6px rgba(0,0,0,.35); }
+.app-row { display: flex; justify-content: space-between; padding: 0 2px; }
+.app { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 60px; font-size: 11px; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.5); }
+.app-button { padding: 0; background: none; border: 0; cursor: pointer; font: inherit; }
+.app-button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; border-radius: 16px; }
+.icon { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 15px; color: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.35); }
+.icon.round { width: 50px; height: 50px; border-radius: 50%; }
+.icon .codicon { font-size: 24px; }
+.icon.blue { background: #3f78d8; } .icon.red { background: #d3524a; } .icon.amber { background: #dc9a2e; } .icon.rose { background: #c8445c; }
+.icon.green { background: #33a05c; } .icon.sky { background: #4a8fe0; } .icon.slate { background: #3b4048; }
+.search { display: flex; align-items: center; gap: 10px; height: 44px; margin: 14px 0 12px; padding: 0 16px; border-radius: 22px; color: #f1f3f4; font-size: 14px; background: rgba(20,20,40,.42); }
+.dock { display: flex; justify-content: space-around; padding: 2px 0 6px; }
+.dock .app { gap: 0; }
+.screen.landscape .home-content { padding-top: calc(var(--top) + 8px); }
+.screen.landscape .search { margin: 8px 0; }
+.screen.landscape .app-row { display: none; }
+
+.device.tablet { border: 14px solid var(--we-bezel); border-radius: 26px; box-shadow: 0 0 20px rgba(0,0,0,.5); }
+.device.laptop, .device.desktop { border: 1px solid var(--we-border); border-radius: 8px 8px 0 0; background: var(--we-navy); box-shadow: 0 0 20px rgba(0,0,0,.4); }
+.win-bar { height: 28px; display: flex; align-items: center; gap: 6px; padding: 0 10px; background: var(--we-navy); }
+.dot { width: 11px; height: 11px; border-radius: 50%; }
+.dot.red { background: #ff5f57; } .dot.yellow { background: #febc2e; } .dot.green { background: #28c840; }
+.device.none { outline: 1px solid var(--we-border); background: transparent; }
+
+.handle { position: absolute; z-index: 5; background: transparent; touch-action: none; }
+.handle:hover, .handle:focus-visible { background: var(--we-accent); opacity: .7; }
+.h-right { top: 24px; bottom: 6px; right: -10px; width: 8px; cursor: ew-resize; border-radius: 4px; }
+.h-bottom { left: 0; right: 6px; bottom: -4px; height: 8px; cursor: ns-resize; border-radius: 4px; }
+.h-corner { right: -10px; bottom: -4px; width: 14px; height: 14px; cursor: nwse-resize; border-radius: 4px; }
+
+/* ---- overlay states ---- */
+.overlay { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; padding: 24px; background: var(--we-stage); }
+.overlay.visible { display: flex; }
+.overlay[data-state="loading"] { background: transparent; pointer-events: none; align-items: flex-start; justify-content: flex-end; }
+.card { max-width: 520px; text-align: center; }
+.overlay[data-state="loading"] .card { display: flex; align-items: center; gap: 8px; padding: 6px 12px; margin: 10px; background: var(--we-navy); color: #fff; border-radius: 14px; font-size: 12px; }
+.hero { font-size: 44px !important; color: var(--we-accent); }
+.hero.err { color: var(--we-err); }
+.card h2 { margin: 8px 0; font-weight: 600; }
+.card p { margin: 6px 0 14px; line-height: 1.5; color: var(--vscode-descriptionForeground); }
+.card .err-msg { color: var(--vscode-foreground); }
+.card .hint { font-size: 12px; margin-top: 18px; }
+.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.actions button { padding: 6px 14px; font: inherit; border-radius: 3px; cursor: pointer; border: 1px solid var(--vscode-button-border, transparent); }
+.actions .primary { color: var(--vscode-button-foreground); background: var(--vscode-button-background); }
+.actions .primary:hover { background: var(--vscode-button-hoverBackground); }
+.actions .secondary { color: var(--vscode-button-secondaryForeground); background: var(--vscode-button-secondaryBackground); }
+.actions .secondary:hover { background: var(--vscode-button-secondaryHoverBackground); }
+.spinner { width: 14px; height: 14px; border-radius: 50%; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 3s; } .rotate-icon .codicon { transition: none; } }
+
+/* ---- diagnostics ---- */
+.diagnostics { display: flex; flex-direction: column; height: 34%; min-height: 140px; max-height: 60%; border-top: 1px solid var(--we-border); background: var(--vscode-panel-background, var(--vscode-editor-background)); }
+.diag-head { display: flex; align-items: center; gap: 6px; padding: 4px 10px; border-bottom: 1px solid var(--we-border); }
+.spacer { flex: 1; }
+.diag-body { flex: 1; overflow: auto; padding: 4px 12px 10px; }
+.diag-section h3 { margin: 10px 0 4px; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--vscode-descriptionForeground); }
+.count { margin-left: 6px; padding: 0 6px; border-radius: 8px; background: var(--vscode-badge-background); color: var(--vscode-badge-foreground); }
+.diag-section ul { margin: 0; padding: 0; list-style: none; }
+.diag-section li { display: flex; flex-direction: column; gap: 1px; padding: 3px 6px 3px 20px; position: relative; border-radius: 3px; word-break: break-word; }
+.diag-section li::before { content: "•"; position: absolute; left: 6px; }
+.diag-section li.ok::before { content: "✓"; color: var(--we-ok); }
+.diag-section li.warn::before { content: "!"; color: var(--we-warn); font-weight: 700; }
+.diag-section li.err::before { content: "✕"; color: var(--we-err); font-weight: 700; }
+.diag-section li.muted { color: var(--vscode-descriptionForeground); }
+.diag-section li.clickable { cursor: pointer; }
+.diag-section li.clickable:hover { background: var(--vscode-list-hoverBackground); }
+.detail { font-family: var(--vscode-editor-font-family, monospace); font-size: 11px; color: var(--vscode-descriptionForeground); }
+.muted { color: var(--vscode-descriptionForeground); }
+
+.status { padding: 2px 10px; font-size: 11px; color: var(--vscode-statusBar-foreground, #fff); background: var(--vscode-statusBar-background, var(--we-accent)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ---- device rail and notice (emulator controls, outside the Android screen) ---- */
+.stage.has-rail { padding-right: 52px; }
+.rail { position: absolute; z-index: 5; right: 10px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 2px; padding: 6px 4px;
+  border: 1px solid var(--we-border); border-radius: 8px; background: var(--vscode-editorWidget-background, var(--vscode-editor-background)); box-shadow: 0 2px 8px rgba(0,0,0,.35); }
+.rail-sep { height: 1px; margin: 4px 2px; background: var(--we-border); }
+.notice { border-bottom: 1px solid var(--we-border); background: var(--vscode-editorWidget-background, var(--vscode-editor-background)); }
+.notice-row { display: flex; align-items: center; gap: 12px; padding: 8px 12px; }
+.notice-row .codicon { font-size: 18px; color: var(--we-accent); }
+.notice-row .codicon.err { color: var(--we-err); }
+.notice-row .text { flex: 1; min-width: 0; line-height: 1.4; }
+.notice-row .text strong { display: block; }
+.notice-row .text span { color: var(--vscode-descriptionForeground); }
+.notice-row .actions { justify-content: flex-end; }
+.notice-row .actions button { padding: 4px 10px; }

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Web Emulator">
+  <rect x="7" y="2.5" width="10" height="19" rx="2.2"/>
+  <path d="M10.5 5h3"/>
+  <path d="M10.5 19h3"/>
+  <path d="M3 8v8M21 8v8" opacity=".55"/>
+</svg>
