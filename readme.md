@@ -1,19 +1,19 @@
 # Web Emulator
 
-Responsive layout testing inside VS Code. Preview an HTML file or a running dev server at phone, tablet, laptop and desktop sizes, resize freely, compare viewports side by side, and get a diagnostics panel that points at elements causing horizontal overflow.
+Responsive layout testing inside VS Code. Preview an HTML file or a running dev server at phone, tablet, laptop, and desktop sizes, resize freely, compare viewports side by side, and get a diagnostics panel that points to elements causing horizontal overflow.
 
 > The emulator renders your website in a browser frame styled like an Android phone. It is **not** the Android Emulator, does not run Android, and does not reproduce real hardware. See [Limitations](#limitations).
 
 ## Features
 
-- **Android Studio-style device**: dark graphite frame, punch-hole camera, hardware buttons, a status bar (time, Wi-Fi, signal, battery) and gesture or 3-button navigation. The website renders in the screen between the bars. No app bar or bottom menu is added to the screen.
+- **Android Studio-style device**: dark graphite frame, punch-hole camera, hardware buttons, a status bar (time, Wi-Fi, signal, battery), and gesture or 3-button navigation. The website renders on the screen between the bars. No app bar or bottom menu is added to the screen.
 - **Android home screen** when nothing is loaded (wallpaper, date, app icons, search, dock). **Home** (side rail, toolbar, gesture pill or nav button, or *Reset to Android Home Screen*) returns to it; the globe icon in the dock reopens the website.
 - **Device presets**: Pixel 9, 8, 7 and 6 (with physical resolution, 420 dpi profile and pixel ratio), Pixel 4 and Redmi sizes from the original prototype, generic Mobile 375×812 and 390×844, Tablet 768×1024, Laptop 1366×768, Desktop 1920×1080, **Custom device**, plus your own via `webEmulator.customPresets`.
-- **Device vs viewport**: for Android phones the width and height fields are the *screen* in CSS pixels. The website's CSS viewport is the screen minus the status bar (24 px) and navigation (16 px gesture area, or 48 px for 3-button navigation, on the right edge in landscape). Both are shown above the device, and the footer shows the physical resolution and pixel ratio.
+- **Device vs viewport**: for Android phones, the width and height fields are the *screen* in CSS pixels. The website's CSS viewport is the screen minus the status bar (24 px) and navigation (16 px gesture area, or 48 px for 3-button navigation, on the right edge in landscape). Both are shown above the device, and the footer shows the physical resolution and pixel ratio.
 - **Custom sizes**: type a width and height, or drag the edges/corner (keyboard: focus a handle and use the arrow keys, Shift for bigger steps).
 - **Rotate** (camera moves to the left edge, 3-button navigation moves to the right), **zoom** (25–200 %), **fit to window**, gesture/3-button toggle, device frame on/off, copy dimensions. A side rail next to the device offers rotate, zoom, back, home and reload.
 - **Compare mode**: show several viewports side by side (`webEmulator.comparePresets`).
-- **Local files**: pick any `.html` file; CSS, JS (including ES modules), images, fonts and relative paths work because the page is served over HTTP, not `file://`. Client-side routes fall back to the entry file.
+- **Local files**: pick any `.html` file; CSS, JS (including ES modules), images, fonts, and relative paths work because the page is served over HTTP, not `file://`. Client-side routes fall back to the entry file.
 - **Dev servers**: preview `http://localhost:3000`, `:5173`, `:8000`, or any port. Hot-reload WebSockets keep working.
 - **Diagnostics** (bug icon): horizontal overflow, elements extending past the viewport, which `@media` width/height rules match at this size, uncaught JS errors, `console.error`/`warn`, failed images/scripts/stylesheets, missing `<meta name="viewport">`. Click an element in the list to highlight it in the preview.
 - **Auto-reload** when you save a file in the project (`webEmulator.autoReload`).
@@ -84,7 +84,7 @@ Python source is never rendered directly. The framework runs, and the emulator p
 2. Run **Start Flask Server…** or **Start Django Server…**. The extension checks that the framework is importable, shows the **exact command** and asks for confirmation, starts it as a VS Code task (visible in the terminal panel), waits for the port, then opens the preview.
 3. **Stop Python Server** ends it.
 
-Nothing is installed for you. If Flask or Django is missing you get the command to run yourself, for example `python -m pip install flask`.
+Nothing is installed for you. If Flask or Django is missing, you get the command to run yourself, for example `python -m pip install flask`.
 
 Flask is launched as `python -m flask --app <app> run --host 127.0.0.1 --port 5000`, Django as `python manage.py runserver 127.0.0.1:8000`. Servers started elsewhere (your own terminal, Docker, `flask run` with other options) work too: just enter the URL.
 
@@ -124,7 +124,7 @@ Raw `file://` pages cannot load ES modules, `fetch()` local data, or use client-
 - Diagnostics are not DevTools. They need an injectable HTML page; pages with a strict nonce-based CSP, non-HTML responses, or `injectDiagnostics: false` show no diagnostics. Cross-origin stylesheets cannot be inspected for media queries.
 - Dev servers that bind only to a non-loopback address or require HTTPS client certificates are not supported. Self-signed HTTPS is accepted for loopback targets only.
 - HTTP range requests (video seeking) are not implemented by the static server.
-- In remote/Codespaces browser windows the preview needs a port forwarded as `localhost`.
+- In remote/Codespaces browser windows, the preview needs a port forwarded as `localhost`.
 - The five legacy device sizes come from the original prototype and are not exact hardware values.
 
 ## Development
@@ -133,10 +133,10 @@ Raw `file://` pages cannot load ES modules, `fetch()` local data, or use client-
 npm install
 npm run compile        # copies codicons, builds extension + webview
 npm run lint
-npm run test:unit      # mocha, no VS Code needed
+npm run test: unit      # mocha, no VS Code needed
 WEB_EMULATOR_TEST_PYTHON=/path/to/python npm run test:unit   # also runs real Flask/Django tests
-npm run test:integration   # downloads VS Code, runs tests in an Extension Development Host
-npm run test:visual        # optional: real-browser checks of the device UI (needs Firefox, geckodriver and selenium)
+npm run test: integration   # downloads VS Code, runs tests in an Extension Development Host
+npm run test: visual        # optional: real-browser checks of the device UI (needs Firefox, geckodriver and selenium)
 npm run package        # produces web-emulator-<version>.vsix
 ```
 
