@@ -58,12 +58,12 @@
       },
       {
         "command": "webEmulator.selectEntryFile",
-        "title": "Select HTML Entry File\u2026",
+        "title": "Select HTML Entry File…",
         "category": "Web Emulator"
       },
       {
         "command": "webEmulator.selectUrl",
-        "title": "Select Preview URL\u2026",
+        "title": "Select Preview URL…",
         "category": "Web Emulator"
       },
       {
@@ -74,7 +74,7 @@
       },
       {
         "command": "webEmulator.selectViewport",
-        "title": "Select Viewport Preset\u2026",
+        "title": "Select Viewport Preset…",
         "category": "Web Emulator"
       },
       {
@@ -104,17 +104,17 @@
       },
       {
         "command": "webEmulator.selectPythonInterpreter",
-        "title": "Select Python Interpreter\u2026",
+        "title": "Select Python Interpreter…",
         "category": "Web Emulator"
       },
       {
         "command": "webEmulator.startFlask",
-        "title": "Start Flask Server\u2026",
+        "title": "Start Flask Server…",
         "category": "Web Emulator"
       },
       {
         "command": "webEmulator.startDjango",
-        "title": "Start Django Server\u2026",
+        "title": "Start Django Server…",
         "category": "Web Emulator"
       },
       {
@@ -373,5 +373,9 @@
     "mocha": "^10.8.2",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.72.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ilyasji79/web-emulator.git"
   }
 }
