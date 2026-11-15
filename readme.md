@@ -4,6 +4,20 @@ Responsive layout testing inside VS Code. Preview an HTML file or a running dev 
 
 > The emulator renders your website in a browser frame styled like an Android phone. It is **not** the Android Emulator, does not run Android, and does not reproduce real hardware. See [Limitations](#limitations).
 
+## Screenshots
+
+### Interface
+![Web Emulator Interface - Sidebar, Editor and Pixel 9 Preview](https://raw.githubusercontent.com/ilyasji79/web-emulator/main/images/interface.png)
+
+### Presets
+![Web Emulator Presets - Pixel 9 Preset](https://raw.githubusercontent.com/ilyasji79/web-emulator/main/images/presets.png)
+
+### Multi-Viewport Preview
+![Web Emulator Multi-Viewport - Pixel 9, Tablet and Laptop side by side](https://raw.githubusercontent.com/ilyasji79/web-emulator/main/images/viewport.png)
+
+### Server Support
+![Web Emulator Server Support - Python FastAPI Server with Dark Mode](https://raw.githubusercontent.com/ilyasji79/web-emulator/main/images/server.png)
+
 ## Features
 
 - **Android Studio-style device**: dark graphite frame, punch-hole camera, hardware buttons, a status bar (time, Wi-Fi, signal, battery), and gesture or 3-button navigation. The website renders on the screen between the bars. No app bar or bottom menu is added to the screen.
@@ -141,6 +155,8 @@ npm run package        # produces web-emulator-<version>.vsix
 ```
 
 Press `F5` in VS Code to launch an Extension Development Host. Set `publisher` in `package.json` to your Marketplace publisher id before `vsce publish`.
+
+
 
 ## Troubleshooting
 
