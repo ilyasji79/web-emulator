@@ -2,7 +2,7 @@
   "name": "web-emulator",
   "displayName": "Web Emulator",
   "description": "Responsive layout testing inside VS Code: device presets, custom viewports, overflow diagnostics, local dev server and Flask/Django support.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "publisher": "solution-infotech-services",
   "license": "MIT",
   "icon": "media/icon.png",
