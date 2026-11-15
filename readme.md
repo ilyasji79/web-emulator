@@ -7,16 +7,16 @@ Responsive layout testing inside VS Code. Preview an HTML file or a running dev 
 ## Screenshots
 
 ### Interface
-![Web Emulator Interface - Sidebar, Editor and Pixel 9 Preview](https://raw.githubusercontent.com/ilyasji79/web-emulator/main/images/interface.png)
+[Web Emulator Interface - Sidebar, Editor and Pixel 9 Preview](https://raw.githubusercontent.com/ilyasji79/web-emulator/main/images/interface.png)
 
 ### Presets
-![Web Emulator Presets - Pixel 9 Preset](https://raw.githubusercontent.com/ilyasji79/web-emulator/main/images/presets.png)
+[Web Emulator Presets - Pixel 9 Preset](https://raw.githubusercontent.com/ilyasji79/web-emulator/main/images/presets.png)
 
 ### Multi-Viewport Preview
-![Web Emulator Multi-Viewport - Pixel 9, Tablet and Laptop side by side](https://raw.githubusercontent.com/ilyasji79/web-emulator/main/images/viewport.png)
+[Web Emulator Multi-Viewport - Pixel 9, Tablet and Laptop side by side](https://raw.githubusercontent.com/ilyasji79/web-emulator/main/images/viewport.png)
 
 ### Server Support
-![Web Emulator Server Support - Python FastAPI Server with Dark Mode](https://raw.githubusercontent.com/ilyasji79/web-emulator/main/images/server.png)
+[Web Emulator Server Support - Python FastAPI Server with Dark Mode](https://raw.githubusercontent.com/ilyasji79/web-emulator/main/images/server.png)
 
 ## Features
 
@@ -155,8 +155,6 @@ npm run package        # produces web-emulator-<version>.vsix
 ```
 
 Press `F5` in VS Code to launch an Extension Development Host. Set `publisher` in `package.json` to your Marketplace publisher id before `vsce publish`.
-
-
 
 ## Troubleshooting
 
